@@ -51,7 +51,7 @@ def createTrainingData(filenames):
     # Read the data and append SENTENCE_START and SENTENCE_END tokens
     print "Reading TSV file..."
     reader = []
-    for filename in filenames
+    for filename in filenames:
         with open(filename, 'rb') as f:
             for line in f:
                 els = line.split('\t')
