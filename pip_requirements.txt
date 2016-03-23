@@ -1,4 +1,11 @@
 BeautifulSoup==3.2.1
-argparse==1.2.1
+Keras==0.3.2
+nltk==3.2
+numpy==1.10.4
+pydot==1.0.2
+pyparsing==2.1.1
 pysqlite==2.8.1
-wsgiref==0.1.2
+PyYAML==3.11
+scipy==0.17.0
+six==1.10.0
+Theano==0.8.0
