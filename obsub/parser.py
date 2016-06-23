@@ -58,14 +58,19 @@ def createTrainingData(filenames):
                 reader.append(els) #array of arrays [site, sentence, score]
     
     # Split full comments into sentences
+    sentences = []
+    for line in reader:
+        for sents in nltk.sent_tokenize(line[1].decode('utf-8').lower()):
+            sentences.append((sents, line[2]))
 
-    sentences = list(itertools.chain(*[nltk.sent_tokenize(x[1].decode('utf-8').lower()) for x in reader]))
+    #sentences = list(itertools.chain(*[[nltk.sent_tokenize(x[1].decode('utf-8').lower()), x[2]] for x in reader]))
+    
     # Append SENTENCE_START and SENTENCE_END
     #sentences = ["%s %s %s" % (sentence_start_token, x, sentence_end_token) for x in sentences]
     print "Parsed %d sentences." % (len(sentences))
     
     # Tokenize the sentences into words
-    tokenized_sentences = [nltk.word_tokenize(sent) for sent in list(sentences)]
+    tokenized_sentences = [nltk.word_tokenize(x[0]) for x in list(sentences)]
      
     # Count the word frequencies
     word_freq = nltk.FreqDist(itertools.chain(*tokenized_sentences))
@@ -84,17 +89,17 @@ def createTrainingData(filenames):
     for i, sent in enumerate(tokenized_sentences):
         tokenized_sentences[i] = [w if w in word_to_index else unknown_token for w in sent]
      
-    print "\nExample sentence: '%s'" % sentences[0]
+    print "\nExample sentence: '%s'" % sentences[0][0]
     print "\nExample sentence after Pre-processing: '%s'" % tokenized_sentences[0]
      
     # Create the training data
     X_train = np.asarray([[word_to_index[w] for w in sent[:-1]] for sent in tokenized_sentences])
-    y_train = np.asarray([float(rating[2]) for rating in reader])
+    y_train = np.asarray([float(x[1]) for x in sentences], dtype=float)
 
-    return X_train, y_train
+    return X_train, y_train, index_to_word, word_to_index
 
 def main(): 
-   xt, yt = createTrainingData(['../datasets/RT_train.txt'])
+   xt, yt, index_to_word = createTrainingData(['../datasets/RT_train.txt'])
 
 if __name__ == "__main__":
     main()
